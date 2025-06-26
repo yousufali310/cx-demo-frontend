@@ -32,7 +32,8 @@ import {
   Grid,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Autocomplete
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -571,72 +572,76 @@ export default function Films() {
         <Box sx={{ p: 2 }}>
           <Grid container spacing={2} direction="column">
             <Grid item xs={12}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Category</InputLabel>
-                <Select
-                  value={filters.category || ''}
-                  label="Category"
-                  onChange={(e) => handleFilterChange('category', e.target.value)}
-                >
-                  <MenuItem value="">All Categories</MenuItem>
-                  {filterOptions.categories.map(category => (
-                    <MenuItem key={category.category_id} value={category.category_id}>
-                      {category.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+              
+                options={filterOptions.categories}
+                getOptionLabel={(option) => option.name}
+                value={
+                  filterOptions.categories.find((cat) => cat.category_id === filters.category) || null
+                }
+               
+                onChange={(event, newValue) => {
+                  handleFilterChange('category', newValue ? newValue.category_id : '');
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Category" size="small" fullWidth />
+                )}
+                isOptionEqualToValue={(option, value) => option.category_id === value.category_id}
+              />
+             
             </Grid>
             <Grid item xs={12}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Language</InputLabel>
-                <Select
-                  value={filters.language || ''}
-                  label="Language"
-                  onChange={(e) => handleFilterChange('language', e.target.value)}
-                >
-                  <MenuItem value="">All Languages</MenuItem>
-                  {filterOptions.languages.map(language => (
-                    <MenuItem key={language.language_id} value={language.language_id}>
-                      {language.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+             
+              <Autocomplete
+                options={filterOptions.languages}
+                getOptionLabel={(option) => option.name}
+                value={
+                  filterOptions.languages.find((lang) => lang.language_id === filters.language) || null
+                }
+                onChange={(event, newValue) => {
+                  handleFilterChange('language', newValue ? newValue.language_id : '');
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Language" size="small" fullWidth />
+                )}
+                isOptionEqualToValue={(option, value) => option.language_id === value.language_id}
+              />
+
             </Grid>
             <Grid item xs={12}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Release Year</InputLabel>
-                <Select
-                  value={filters.release_year || ''}
-                  label="Release Year"
-                  onChange={(e) => handleFilterChange('release_year', e.target.value)}
-                >
-                  <MenuItem value="">All Years</MenuItem>
-                  {filterOptions.years.map(year => (
-                    <MenuItem key={year} value={year}>
-                      {year}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              
+
+              <Autocomplete
+                options={filterOptions.years}
+                getOptionLabel={(option) => option.toString()}
+                value={filters.release_year || null}
+                onChange={(event, newValue) => {
+                  handleFilterChange('release_year', newValue || '');
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Release Year" size="small" fullWidth />
+                )}
+              />
+
             </Grid>
             <Grid item xs={12}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Actor</InputLabel>
-                <Select
-                  value={filters.actor || ''}
-                  label="Actor"
-                  onChange={(e) => handleFilterChange('actor', e.target.value)}
-                >
-                  <MenuItem value="">All Actors</MenuItem>
-                  {filterOptions.actors.map(actor => (
-                    <MenuItem key={actor.actor_id} value={actor.actor_id}>
-                      {actor.full_name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+             
+
+              <Autocomplete
+                options={filterOptions.actors}
+                getOptionLabel={(option) => option.full_name}
+                value={
+                  filterOptions.actors.find((actor) => actor.actor_id === filters.actor) || null
+                }
+                onChange={(event, newValue) => {
+                  handleFilterChange('actor', newValue ? newValue.actor_id : '');
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Actor" size="small" fullWidth />
+                )}
+                isOptionEqualToValue={(option, value) => option.actor_id === value.actor_id}
+              />
+
             </Grid>
             <Grid item xs={12}>
               <Accordion>

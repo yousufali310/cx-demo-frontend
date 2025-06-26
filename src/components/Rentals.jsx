@@ -411,7 +411,7 @@ export default function Rental() {
     }
   };
 
-  const fetchRentals = async () => {
+  const fetchRentals = async (flag) => {
     try {
       setLoading(true);
       const queryParams = new URLSearchParams({
@@ -420,11 +420,13 @@ export default function Rental() {
       });
 
       // Add filters to query params if they exist
-      if (filters.film_id) queryParams.append('film_id', filters.film_id);
+     if(flag !== 0){
+       if (filters.film_id) queryParams.append('film_id', filters.film_id);
       if (filters.customer_id) queryParams.append('customer_id', filters.customer_id);
       if (filters.store_id) queryParams.append('store_id', filters.store_id);
       if (filters.start_date) queryParams.append('start_date', filters.start_date);
-      if (filters.end_date) queryParams.append('end_date', filters.end_date);
+      if (filters.end_date) queryParams.append('end_date', filters.end_date);}
+      
       
       const response = await fetch(`${apiUrl}/rentals?${queryParams}`);
       const data = await response.json();
@@ -453,7 +455,7 @@ export default function Rental() {
       end_date: ''
     });
     setPage(1);
-    fetchRentals();
+    fetchRentals(0);
     setFilterDrawerOpen(false);
   };
 
@@ -675,7 +677,7 @@ export default function Rental() {
         <Box sx={{ p: 2 }}>
           <Grid container spacing={2} direction="column">
             <Grid item xs={12}>
-              <FormControl fullWidth size="small">
+              {/* <FormControl fullWidth size="small">
                 <InputLabel>Film</InputLabel>
                 <Select
                   value={filters.film_id || ''}
@@ -689,11 +691,23 @@ export default function Rental() {
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+              </FormControl> */}
+<Autocomplete
+  options={filterOptions.films}
+  getOptionLabel={(option) => option.title || ''}
+  isOptionEqualToValue={(option, value) => option.film_id === value.film_id}
+  value={filterOptions.films.find(f => f.film_id === filters.film_id) || null}
+  onChange={(_, newValue) => handleFilterChange('film_id', newValue ? newValue.film_id : '')}
+  renderInput={(params) => (
+    <TextField {...params} label="Film" size="small" fullWidth />
+  )}
+/>
+
+
             </Grid>
 
             <Grid item xs={12}>
-              <FormControl fullWidth size="small">
+              {/* <FormControl fullWidth size="small">
                 <InputLabel>Customer</InputLabel>
                 <Select
                   value={filters.customer_id || ''}
@@ -707,11 +721,23 @@ export default function Rental() {
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+              </FormControl> */}
+
+              <Autocomplete
+  options={filterOptions.customers}
+  getOptionLabel={(option) => option.name || ''}
+  isOptionEqualToValue={(option, value) => option.customer_id === value.customer_id}
+  value={filterOptions.customers.find(c => c.customer_id === filters.customer_id) || null}
+  onChange={(_, newValue) => handleFilterChange('customer_id', newValue ? newValue.customer_id : '')}
+  renderInput={(params) => (
+    <TextField {...params} label="Customer" size="small" fullWidth />
+  )}
+/>
+
             </Grid>
 
             <Grid item xs={12}>
-              <FormControl fullWidth size="small">
+              {/* <FormControl fullWidth size="small">
                 <InputLabel>Store</InputLabel>
                 <Select
                   value={filters.store_id || ''}
@@ -725,7 +751,19 @@ export default function Rental() {
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+              </FormControl> */}
+              <Autocomplete
+                options={filterOptions.stores}
+                getOptionLabel={(option) => option.name || ''}
+                isOptionEqualToValue={(option, value) => option.store_id === value.store_id}
+                value={filterOptions.stores.find(s => s.store_id === filters.store_id) || null}
+                onChange={(_, newValue) => handleFilterChange('store_id', newValue ? newValue.store_id : '')}
+                renderInput={(params) => (
+                  <TextField {...params} label="Store" size="small" fullWidth />
+                )}
+              />
+
+
             </Grid>
 
             <Grid item xs={12}>

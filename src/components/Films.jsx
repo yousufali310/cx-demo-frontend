@@ -46,6 +46,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
 function TabPanel({ children, value, index }) {
   return (
     <div
@@ -191,6 +194,8 @@ export default function Films() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  
   const [filterOptions, setFilterOptions] = useState({
     categories: [],
     languages: [],
@@ -222,7 +227,7 @@ export default function Films() {
 
   const fetchFilterOptions = async () => {
     try {
-      const response = await fetch('http://localhost:8000/films/filter-options');
+      const response = await fetch(`${apiUrl}/films/filter-options`);
       const data = await response.json();
       setFilterOptions(data);
     } catch (error) {
@@ -230,7 +235,7 @@ export default function Films() {
     }
   };
 
-  const fetchFilms = async () => {
+  const fetchFilms = async (flag) => {
     try {
       setLoading(true);
       const queryParams = new URLSearchParams({
@@ -251,11 +256,13 @@ export default function Films() {
         if (filters.length.eq) filterParams.length.eq = filters.length.eq;
       }
 
-      if (Object.keys(filterParams).length > 0) {
+      if(flag !== 0){
+        if (Object.keys(filterParams).length > 0) {
         queryParams.append('filter', JSON.stringify(filterParams));
-      }
+      }}
+      
       console.log(filters);
-            const response = await fetch(`http://localhost:8000/films?${queryParams.toString()}`);
+            const response = await fetch(`${apiUrl}/films?${queryParams.toString()}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -288,7 +295,7 @@ export default function Films() {
 
   const clearFilters = async() => {
      setFilters({
-      category: null,
+      category: '',
       language: '',
       release_year: '',
       actor: '',
@@ -296,7 +303,7 @@ export default function Films() {
     });
     
     setPage(1);
-    fetchFilms();
+    fetchFilms(0);
     setFilterDrawerOpen(false);
   };
 
@@ -310,7 +317,7 @@ export default function Films() {
     try {
       setDetailLoading(true);
       setDrawerOpen(true);
-      const response = await fetch(`http://localhost:8000/films/${film.film_id}`);
+      const response = await fetch(`${apiUrl}/films/${film.film_id}`);
       const data = await response.json();
       setSelectedFilm(data);
       setTabValue(0);

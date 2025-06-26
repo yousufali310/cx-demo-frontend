@@ -42,6 +42,8 @@ import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 function TabPanel({ children, value, index }) {
   return (
     <div
@@ -305,7 +307,7 @@ export default function Stores() {
   const fetchStores = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8000/stores?page=${page}&limit=${rowsPerPage}`);
+      const response = await fetch(`${apiUrl}/stores?page=${page}&limit=${rowsPerPage}`);
       const data = await response.json();
       setStores(data.data || []);
       setTotalPages(data.pagination.totalPages);
@@ -320,7 +322,7 @@ export default function Stores() {
     try {
       setDetailLoading(true);
       setDrawerOpen(true);
-      const response = await fetch(`http://localhost:8000/stores/${store.store_id}`);
+      const response = await fetch(`${apiUrl}/stores/${store.store_id}`);
       const data = await response.json();
       setSelectedStore(data);
       setTabValue(0);

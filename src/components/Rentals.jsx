@@ -56,6 +56,8 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 function TabPanel({ children, value, index }) {
   return (
     <div
@@ -397,7 +399,7 @@ export default function Rental() {
 
   const fetchFilterOptions = async () => {
     try {
-      const response = await fetch('http://localhost:8000/rentals/filter-options');
+      const response = await fetch(`${apiUrl}/rentals/filter-options`);
       const data = await response.json();
       setFilterOptions({
         films: data.films || [],
@@ -424,7 +426,7 @@ export default function Rental() {
       if (filters.start_date) queryParams.append('start_date', filters.start_date);
       if (filters.end_date) queryParams.append('end_date', filters.end_date);
       
-      const response = await fetch(`http://localhost:8000/rentals?${queryParams}`);
+      const response = await fetch(`${apiUrl}/rentals?${queryParams}`);
       const data = await response.json();
       setRentals(data.data || []);
       setTotalPages(data.pagination.totalPages);
@@ -465,7 +467,7 @@ export default function Rental() {
     try {
       setDetailLoading(true);
       setDrawerOpen(true);
-      const response = await fetch(`http://localhost:8000/rentals/${rental.rental_id}`);
+      const response = await fetch(`${apiUrl}/rentals/${rental.rental_id}`);
       const data = await response.json();
       setSelectedRental(data);
       setTabValue(0);
